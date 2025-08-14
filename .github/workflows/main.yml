@@ -4,65 +4,20 @@ on:
     branches: [main]
 jobs:
   deploy-dev:
-    environment: dev
-    runs-on: ubuntu-latest
-    steps:
-      - name: check out
-        uses: actions/checkout@v3
-      - name: set up node
-        uses: actions/setup-node@v3
-        with:
-          node-version: 22
-          cache: npm
-      - name: install
-        run: npm ci
-      - name: test
-        run: npm test
-      - name: build
-        run: npm run build
-      - name: deploy
-        run: npm run deploy
+    # actions 하위 폴더 이름 수정
+    uses: ./.github/actions/reusable.yml
+    with:
+      env: dev
 
   deploy-qa:
     needs: [deploy-dev]
-    environment: qa
-    runs-on: ubuntu-latest
-    steps:
-      - name: check out
-        uses: actions/checkout@v3
-      - name: set up node
-        uses: actions/setup-node@v3
-        with:
-          node-version-file: ".nvmrc"
-          cache: npm
-      - name: install
-        run: npm ci
-      - name: test
-        run: npm test
-      - name: build
-        run: npm run build
-      - name: deploy
-        run: npm run deploy
+    uses: ./.github/actions/reusable.yml
+    with:
+      env: qa
 
   deploy-prod:
     needs: [deploy-qa]
-    environment: prod
-    runs-on: ubuntu-latest
-    steps:
-      - name: check out
-        uses: actions/checkout@v3
-      - name: set up node
-        uses: actions/setup-node@v3
-        with:
-          node-version-file: ".nvmrc"
-          cache: npm
-      - name: install
-        run: npm ci
-      - name: test
-        run: npm test
-      - name: build
-        run: npm run build
-      - name: deploy
-        run: npm run deploy
-      - name: notify
-        run: echo 'Deployment completed in prod! 🎉'
+    uses: ./.github/actions/reusable.yml
+    with:
+      env: prod
+      notify: true
