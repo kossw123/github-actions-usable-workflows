@@ -12,7 +12,7 @@ jobs:
       - name: set up node
         uses: actions/setup-node@v3
         with:
-          node-version-file: ".nvmrc"
+          node-version: 22
           cache: npm
       - name: install
         run: npm ci
