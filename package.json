@@ -16,7 +16,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "deploy": "react-scripts deploy"
   },
   "eslintConfig": {
     "extends": [
@@ -35,5 +36,17 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "description": "https://www.daleseo.com/github-actions-reusable-workflows/",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kossw123/github-actions-usable-workflows.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kossw123/github-actions-usable-workflows/issues"
+  },
+  "homepage": "https://github.com/kossw123/github-actions-usable-workflows#readme"
 }

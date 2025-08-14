@@ -1,0 +1,43 @@
+name: Our Reusable
+
+on:
+  workflow_call:
+    inputs:
+      env:
+        type: string
+        required: true
+      notify:
+        type: boolean
+        default: false
+
+jobs:
+  deploy:
+    # 환경 보호 규칙을 쓰고 싶으면 GitHub Settings에서 env 이름 등록 가능
+    environment: ${{ inputs.env }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'  # ❌ node-version-file → ✅ node-version
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test
+
+      - name: Build project
+        run: npm run build
+
+      - name: Deploy
+        run: npm run deploy
+
+      - name: Notify
+        if: ${{ inputs.notify }}
+        run: echo "Deployment completed in ${{ inputs.env }}! 🎉"
