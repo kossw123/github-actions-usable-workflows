@@ -20,4 +20,4 @@ jobs:
     uses: ./.github/actions/reusable.yml
     with:
       env: prod
-      notify: true 
+      notify: true  
