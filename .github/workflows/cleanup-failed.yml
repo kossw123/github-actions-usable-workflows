@@ -1,0 +1,46 @@
+name: Cleanup Failed Workflow Runs (PAT Stable)
+
+on:
+  workflow_dispatch: # 수동 실행 가능
+
+jobs:
+  cleanup_failed:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.PAT_TOKEN }}
+      REPO: kossw123/github-actions-custom-action
+
+    steps:
+      - name: Install latest GitHub CLI
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y curl jq
+          curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
+          sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg
+          echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
+          sudo apt-get update
+          sudo apt-get install -y gh
+
+      - name: Authenticate with PAT
+        run: |
+          echo "$GH_TOKEN" | gh auth login --with-token
+
+      - name: Delete all failed workflow runs
+        run: |
+          echo "Fetching failed workflow runs for $REPO ..."
+          
+          RUN_IDS=$(gh run list --repo "$REPO" --limit 1000 --json databaseId,conclusion \
+            | jq -r '.[] | select(.conclusion=="failure") | .databaseId' \
+            | grep -E '^[0-9]+$')
+
+          if [ -z "$RUN_IDS" ]; then
+            echo "✅ 삭제할 실패한 워크플로 실행 기록이 없습니다."
+            exit 0
+          fi
+
+          echo "$RUN_IDS" | while read run_id; do
+            echo "🗑 Deleting failed run ID: $run_id"
+            gh run delete "$run_id" --repo "$REPO"
+          done
+
+          echo "✅ 모든 실패한 워크플로 기록 삭제 완료."
