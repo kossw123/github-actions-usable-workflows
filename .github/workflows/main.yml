@@ -4,19 +4,19 @@ on:
     branches: [main]
 jobs:
   deploy-dev:
-    uses: ./.github/actions/reusable/reusable.yml
+    uses: ./.github/actions/my-actions/reusable.yml
     with:
       env: dev
 
   deploy-qa:
     needs: [deploy-dev]
-    uses: ./.github/actions/reusable/reusable.yml
+    uses: ./.github/actions/my-actions/reusable.yml
     with:
       env: qa
 
   deploy-prod:
     needs: [deploy-qa]
-    uses: ./.github/actions/reusable/reusable.yml
+    uses: ./.github/actions/my-actions/reusable.yml
     with:
       env: prod
       notify: true
