@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       GH_TOKEN: ${{ secrets.PAT_TOKEN }}
-      REPO: kossw123/github-actions-custom-action
+      REPO: ${{ github.repository }}
 
     steps:
       - name: Install latest GitHub CLI
